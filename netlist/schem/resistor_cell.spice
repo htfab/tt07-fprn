@@ -1,0 +1,55 @@
+** sch_path: /foss/designs/matrix-dac/xschem/resistor_cell.sch
+.subckt resistor_cell VDD LINE D_LINE D_SHORT UB D_RES GATE UA VSS
+*.PININFO VSS:B UB:B UA:B GATE:I D_RES:I D_SHORT:I D_LINE:I LINE:B VDD:B
+x1 VDD net2 D_RES GATE net1 UA VSS latched_switch
+XR1 net1 UB VSS sky130_fd_pr__res_xhigh_po_0p35 L=8.75 mult=1 m=1
+x2 VDD net3 D_SHORT GATE UB UA VSS latched_switch
+x3 VDD net4 D_LINE GATE LINE UA VSS latched_switch
+* noconn #net2
+* noconn #net3
+* noconn #net4
+.ends
+
+* expanding   symbol:  latched_switch.sym # of pins=7
+** sym_path: /foss/designs/matrix-dac/xschem/latched_switch.sym
+** sch_path: /foss/designs/matrix-dac/xschem/latched_switch.sch
+.subckt latched_switch VDD Q D GATE UB UA VSS
+*.PININFO VSS:B UB:B VDD:B UA:B D:I GATE:I Q:O
+x1 VDD net1 UA UB Q VSS pass_gate
+x2 Q VDD net1 net2 D GATE VSS latch
+x3 VDD GATE net2 VSS inverter
+.ends
+
+
+* expanding   symbol:  pass_gate.sym # of pins=6
+** sym_path: /foss/designs/matrix-dac/xschem/pass_gate.sym
+** sch_path: /foss/designs/matrix-dac/xschem/pass_gate.sch
+.subckt pass_gate VDD ENB UA UB EN VSS
+*.PININFO VSS:B VDD:B UA:B UB:B EN:I ENB:I
+XM1 UA EN UB VSS sky130_fd_pr__nfet_g5v0d10v5 L=0.5 W=6.5 nf=1 m=1
+XM2 UA ENB UB VDD sky130_fd_pr__pfet_g5v0d10v5 L=0.5 W=10 nf=1 m=1
+.ends
+
+
+* expanding   symbol:  latch.sym # of pins=7
+** sym_path: /foss/designs/matrix-dac/xschem/latch.sym
+** sch_path: /foss/designs/matrix-dac/xschem/latch.sch
+.subckt latch Q VDD QB GATEB D GATE VSS
+*.PININFO VSS:B VDD:B D:I GATE:I GATEB:I Q:O QB:O
+x1 VDD GATEB D net1 GATE VSS pass_gate
+x2 VDD GATE Q net1 GATEB VSS pass_gate
+x3 VDD net1 QB VSS inverter
+x4 VDD QB Q VSS inverter
+.ends
+
+
+* expanding   symbol:  inverter.sym # of pins=4
+** sym_path: /foss/designs/matrix-dac/xschem/inverter.sym
+** sch_path: /foss/designs/matrix-dac/xschem/inverter.sch
+.subckt inverter VDD IN OUT VSS
+*.PININFO VSS:B VDD:B IN:I OUT:O
+XM1 OUT IN VSS VSS sky130_fd_pr__nfet_g5v0d10v5 L=0.5 W=0.65 nf=1 m=1
+XM2 OUT IN VDD VDD sky130_fd_pr__pfet_g5v0d10v5 L=0.5 W=1 nf=1 m=1
+.ends
+
+.end

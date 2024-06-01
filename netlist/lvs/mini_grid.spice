@@ -1,0 +1,137 @@
+* NGSPICE file created from mini_grid.ext - technology: sky130A
+
+.subckt sky130_fd_pr__nfet_g5v0d10v5_TMGAGH a_n50_n738# a_50_n650# a_n242_n872# a_n108_n650#
+X0 a_50_n650# a_n50_n738# a_n108_n650# a_n242_n872# sky130_fd_pr__nfet_g5v0d10v5 ad=1.885 pd=13.58 as=1.885 ps=13.58 w=6.5 l=0.5
+.ends
+
+.subckt sky130_fd_pr__pfet_g5v0d10v5_KLP5N5 a_n108_n1000# a_n50_n1097# a_50_n1000#
++ w_n308_n1297#
+X0 a_50_n1000# a_n50_n1097# a_n108_n1000# w_n308_n1297# sky130_fd_pr__pfet_g5v0d10v5 ad=2.9 pd=20.58 as=2.9 ps=20.58 w=10 l=0.5
+.ends
+
+.subckt pass_gate VDD ENB UA UB EN VSS
+XXM1 EN UB VSS UA sky130_fd_pr__nfet_g5v0d10v5_TMGAGH
+XXM2 UA ENB UB VDD sky130_fd_pr__pfet_g5v0d10v5_KLP5N5
+.ends
+
+.subckt sky130_fd_pr__nfet_g5v0d10v5_CYDA8L a_n108_n65# a_n50_n153# a_n242_n287# a_50_n65#
+X0 a_50_n65# a_n50_n153# a_n108_n65# a_n242_n287# sky130_fd_pr__nfet_g5v0d10v5 ad=0.1885 pd=1.88 as=0.1885 ps=1.88 w=0.65 l=0.5
+.ends
+
+.subckt sky130_fd_pr__pfet_g5v0d10v5_KLAZY6 a_n50_n197# a_50_n100# w_n308_n397# a_n108_n100#
+X0 a_50_n100# a_n50_n197# a_n108_n100# w_n308_n397# sky130_fd_pr__pfet_g5v0d10v5 ad=0.29 pd=2.58 as=0.29 ps=2.58 w=1 l=0.5
+.ends
+
+.subckt inverter VDD IN OUT VSS
+XXM1 VSS IN VSS OUT sky130_fd_pr__nfet_g5v0d10v5_CYDA8L
+XXM2 IN OUT VDD VDD sky130_fd_pr__pfet_g5v0d10v5_KLAZY6
+.ends
+
+.subckt latch Q QB GATEB D GATE VDD VSS
+Xx1 VDD GATEB D x3/IN GATE VSS pass_gate
+Xx2 VDD GATE Q x3/IN GATEB VSS pass_gate
+Xx3 VDD x3/IN QB VSS inverter
+Xx4 VDD QB Q VSS inverter
+.ends
+
+.subckt latched_switch Q UB UA GATE VDD D VSS
+Xx1 VDD x2/QB UA UB Q VSS pass_gate
+Xx2 Q x2/QB x3/OUT D GATE VDD VSS latch
+Xx3 VDD GATE x3/OUT VSS inverter
+.ends
+
+.subckt sky130_fd_pr__res_xhigh_po_0p35_75WWSS a_n35_n1307# a_n35_875# a_n165_n1437#
+X0 a_n35_875# a_n35_n1307# a_n165_n1437# sky130_fd_pr__res_xhigh_po_0p35 l=8.75
+.ends
+
+.subckt resistor_cell D_RES GATE UA D_LINE LINE D_SHORT UB VSS VDD
+Xx1 x1/Q x1/UB UA GATE VDD D_RES VSS latched_switch
+Xx2 x2/Q UB UA GATE VDD D_SHORT VSS latched_switch
+Xx3 x3/Q LINE UA GATE VDD D_LINE VSS latched_switch
+XXR1 x1/UB UB VSS sky130_fd_pr__res_xhigh_po_0p35_75WWSS
+.ends
+
+.subckt nand_gate VDD A OUT B VSS
+XXM1 OUT A VSS li_350_255# sky130_fd_pr__nfet_g5v0d10v5_CYDA8L
+XXM2 li_350_255# B VSS VSS sky130_fd_pr__nfet_g5v0d10v5_CYDA8L
+XXM3 A OUT VDD VDD sky130_fd_pr__pfet_g5v0d10v5_KLAZY6
+XXM4 B VDD VDD OUT sky130_fd_pr__pfet_g5v0d10v5_KLAZY6
+.ends
+
+.subckt and_gate VDD OUT B A VSS
+Xx1 VDD A x2/IN B VSS nand_gate
+Xx2 VDD x2/IN OUT VSS inverter
+.ends
+
+.subckt grid_cell V_GATE V_LINE V_NEXT H_LINE HD_LINE H_NEXT HD_SHORT HD_RES NODE
++ VD_LINE VD_SHORT VD_RES H_GATE VSS VDD
+Xx1 VD_RES x3/OUT NODE VD_LINE V_LINE VD_SHORT V_NEXT VSS VDD resistor_cell
+Xx2 HD_RES x3/OUT NODE HD_LINE H_LINE HD_SHORT H_NEXT VSS VDD resistor_cell
+Xx3 VDD x3/OUT V_GATE H_GATE VSS and_gate
+.ends
+
+.subckt grid_cell_ext x1/H_NEXT m4_8995_770# x1/NODE x1/H_LINE x1/V_LINE m4_9395_770#
++ x1/V_NEXT x1/HD_RES x1/VD_RES x1/VD_SHORT x1/H_GATE x1/HD_SHORT x1/VD_LINE x1/HD_LINE
++ x1/V_GATE VSUBS x1/VDD
+Xx1 x1/V_GATE x1/V_LINE x1/V_NEXT x1/H_LINE x1/HD_LINE x1/H_NEXT x1/HD_SHORT x1/HD_RES
++ x1/NODE x1/VD_LINE x1/VD_SHORT x1/VD_RES x1/H_GATE VSUBS x1/VDD grid_cell
+.ends
+
+.subckt mini_grid_row grid_cell_ext_1/m4_8995_770# grid_cell_ext_1/x1/HD_RES grid_cell_ext_2/x1/V_LINE
++ grid_cell_ext_0/x1/HD_LINE grid_cell_ext_2/m4_9395_770# grid_cell_ext_0/m4_8995_770#
++ grid_cell_ext_0/x1/V_GATE grid_cell_ext_1/m4_9395_770# grid_cell_ext_1/x1/NODE grid_cell_ext_2/x1/NODE
++ grid_cell_ext_2/x1/H_GATE grid_cell_ext_1/x1/VD_RES grid_cell_ext_0/m4_9395_770#
++ grid_cell_ext_2/x1/V_NEXT grid_cell_ext_1/x1/V_GATE grid_cell_ext_0/x1/V_LINE grid_cell_ext_0/x1/VD_LINE
++ grid_cell_ext_2/x1/VD_RES grid_cell_ext_2/x1/VD_SHORT grid_cell_ext_2/x1/HD_RES
++ grid_cell_ext_0/x1/VD_RES grid_cell_ext_1/x1/HD_SHORT grid_cell_ext_1/x1/VD_LINE
++ grid_cell_ext_2/x1/HD_SHORT grid_cell_ext_2/x1/H_NEXT grid_cell_ext_2/x1/H_LINE
++ grid_cell_ext_2/x1/HD_LINE grid_cell_ext_0/x1/HD_SHORT grid_cell_ext_2/x1/VD_LINE
++ grid_cell_ext_2/m4_8995_770# grid_cell_ext_0/x1/HD_RES grid_cell_ext_0/x1/V_NEXT
++ grid_cell_ext_2/x1/V_GATE grid_cell_ext_0/x1/NODE grid_cell_ext_1/x1/VD_SHORT grid_cell_ext_1/x1/V_LINE
++ grid_cell_ext_1/x1/V_NEXT grid_cell_ext_1/x1/HD_LINE VSUBS grid_cell_ext_0/x1/VD_SHORT
++ grid_cell_ext_2/x1/VDD
+Xgrid_cell_ext_0 grid_cell_ext_1/x1/NODE grid_cell_ext_0/m4_8995_770# grid_cell_ext_0/x1/NODE
++ grid_cell_ext_2/x1/H_LINE grid_cell_ext_0/x1/V_LINE grid_cell_ext_0/m4_9395_770#
++ grid_cell_ext_0/x1/V_NEXT grid_cell_ext_0/x1/HD_RES grid_cell_ext_0/x1/VD_RES grid_cell_ext_0/x1/VD_SHORT
++ grid_cell_ext_2/x1/H_GATE grid_cell_ext_0/x1/HD_SHORT grid_cell_ext_0/x1/VD_LINE
++ grid_cell_ext_0/x1/HD_LINE grid_cell_ext_0/x1/V_GATE VSUBS grid_cell_ext_2/x1/VDD
++ grid_cell_ext
+Xgrid_cell_ext_1 grid_cell_ext_2/x1/NODE grid_cell_ext_1/m4_8995_770# grid_cell_ext_1/x1/NODE
++ grid_cell_ext_2/x1/H_LINE grid_cell_ext_1/x1/V_LINE grid_cell_ext_1/m4_9395_770#
++ grid_cell_ext_1/x1/V_NEXT grid_cell_ext_1/x1/HD_RES grid_cell_ext_1/x1/VD_RES grid_cell_ext_1/x1/VD_SHORT
++ grid_cell_ext_2/x1/H_GATE grid_cell_ext_1/x1/HD_SHORT grid_cell_ext_1/x1/VD_LINE
++ grid_cell_ext_1/x1/HD_LINE grid_cell_ext_1/x1/V_GATE VSUBS grid_cell_ext_2/x1/VDD
++ grid_cell_ext
+Xgrid_cell_ext_2 grid_cell_ext_2/x1/H_NEXT grid_cell_ext_2/m4_8995_770# grid_cell_ext_2/x1/NODE
++ grid_cell_ext_2/x1/H_LINE grid_cell_ext_2/x1/V_LINE grid_cell_ext_2/m4_9395_770#
++ grid_cell_ext_2/x1/V_NEXT grid_cell_ext_2/x1/HD_RES grid_cell_ext_2/x1/VD_RES grid_cell_ext_2/x1/VD_SHORT
++ grid_cell_ext_2/x1/H_GATE grid_cell_ext_2/x1/HD_SHORT grid_cell_ext_2/x1/VD_LINE
++ grid_cell_ext_2/x1/HD_LINE grid_cell_ext_2/x1/V_GATE VSUBS grid_cell_ext_2/x1/VDD
++ grid_cell_ext
+.ends
+
+.subckt mini_grid VDD VD_LINE VD_SHORT VD_RES HD_LINE HD_SHORT HD_RES V_GATE_0 V_GATE_1
++ V_GATE_2 H_GATE_0 H_GATE_1 H_GATE_2 V_INPUT_0 V_INPUT_1 V_INPUT_2 H_INPUT_0 H_INPUT_1
++ H_INPUT_2 ANALOG_PIN V_LINE_0 V_LINE_1 V_LINE_2 H_LINE_0 H_LINE_1 H_LINE_2 VSS
+Xmini_grid_row_0 H_LINE_1 HD_RES V_LINE_2 HD_LINE H_GATE_2 H_LINE_0 V_GATE_0 H_GATE_1
++ mini_grid_row_0/grid_cell_ext_1/x1/NODE mini_grid_row_0/grid_cell_ext_2/x1/NODE
++ H_GATE_0 VD_RES H_GATE_0 mini_grid_row_1/grid_cell_ext_2/x1/NODE V_GATE_1 V_LINE_0
++ VD_LINE VD_RES VD_SHORT HD_RES VD_RES HD_SHORT VD_LINE HD_SHORT H_INPUT_0 H_LINE_0
++ HD_LINE HD_SHORT VD_LINE H_LINE_2 HD_RES mini_grid_row_1/grid_cell_ext_0/x1/NODE
++ V_GATE_2 ANALOG_PIN VD_SHORT V_LINE_1 mini_grid_row_1/grid_cell_ext_1/x1/NODE HD_LINE
++ VSS VD_SHORT VDD mini_grid_row
+Xmini_grid_row_1 H_LINE_1 HD_RES V_LINE_2 HD_LINE H_GATE_2 H_LINE_0 V_GATE_0 H_GATE_1
++ mini_grid_row_1/grid_cell_ext_1/x1/NODE mini_grid_row_1/grid_cell_ext_2/x1/NODE
++ H_GATE_1 VD_RES H_GATE_0 mini_grid_row_2/grid_cell_ext_2/x1/NODE V_GATE_1 V_LINE_0
++ VD_LINE VD_RES VD_SHORT HD_RES VD_RES HD_SHORT VD_LINE HD_SHORT H_INPUT_1 H_LINE_1
++ HD_LINE HD_SHORT VD_LINE H_LINE_2 HD_RES mini_grid_row_2/grid_cell_ext_0/x1/NODE
++ V_GATE_2 mini_grid_row_1/grid_cell_ext_0/x1/NODE VD_SHORT V_LINE_1 mini_grid_row_2/grid_cell_ext_1/x1/NODE
++ HD_LINE VSS VD_SHORT VDD mini_grid_row
+Xmini_grid_row_2 H_LINE_1 HD_RES V_LINE_2 HD_LINE H_GATE_2 H_LINE_0 V_GATE_0 H_GATE_1
++ mini_grid_row_2/grid_cell_ext_1/x1/NODE mini_grid_row_2/grid_cell_ext_2/x1/NODE
++ H_GATE_2 VD_RES H_GATE_0 V_INPUT_2 V_GATE_1 V_LINE_0 VD_LINE VD_RES VD_SHORT HD_RES
++ VD_RES HD_SHORT VD_LINE HD_SHORT H_INPUT_2 H_LINE_2 HD_LINE HD_SHORT VD_LINE H_LINE_2
++ HD_RES V_INPUT_0 V_GATE_2 mini_grid_row_2/grid_cell_ext_0/x1/NODE VD_SHORT V_LINE_1
++ V_INPUT_1 HD_LINE VSS VD_SHORT VDD mini_grid_row
+.ends
+

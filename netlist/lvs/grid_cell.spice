@@ -1,0 +1,72 @@
+* NGSPICE file created from grid_cell.ext - technology: sky130A
+
+.subckt sky130_fd_pr__nfet_g5v0d10v5_TMGAGH a_n50_n738# a_50_n650# a_n242_n872# a_n108_n650#
+X0 a_50_n650# a_n50_n738# a_n108_n650# a_n242_n872# sky130_fd_pr__nfet_g5v0d10v5 ad=1.885 pd=13.58 as=1.885 ps=13.58 w=6.5 l=0.5
+.ends
+
+.subckt sky130_fd_pr__pfet_g5v0d10v5_KLP5N5 a_n108_n1000# a_n50_n1097# a_50_n1000#
++ w_n308_n1297#
+X0 a_50_n1000# a_n50_n1097# a_n108_n1000# w_n308_n1297# sky130_fd_pr__pfet_g5v0d10v5 ad=2.9 pd=20.58 as=2.9 ps=20.58 w=10 l=0.5
+.ends
+
+.subckt pass_gate VDD ENB UA UB EN VSS
+XXM1 EN UB VSS UA sky130_fd_pr__nfet_g5v0d10v5_TMGAGH
+XXM2 UA ENB UB VDD sky130_fd_pr__pfet_g5v0d10v5_KLP5N5
+.ends
+
+.subckt sky130_fd_pr__nfet_g5v0d10v5_CYDA8L a_n108_n65# a_n50_n153# a_n242_n287# a_50_n65#
+X0 a_50_n65# a_n50_n153# a_n108_n65# a_n242_n287# sky130_fd_pr__nfet_g5v0d10v5 ad=0.1885 pd=1.88 as=0.1885 ps=1.88 w=0.65 l=0.5
+.ends
+
+.subckt sky130_fd_pr__pfet_g5v0d10v5_KLAZY6 a_n50_n197# a_50_n100# w_n308_n397# a_n108_n100#
+X0 a_50_n100# a_n50_n197# a_n108_n100# w_n308_n397# sky130_fd_pr__pfet_g5v0d10v5 ad=0.29 pd=2.58 as=0.29 ps=2.58 w=1 l=0.5
+.ends
+
+.subckt inverter VDD IN OUT VSS
+XXM1 VSS IN VSS OUT sky130_fd_pr__nfet_g5v0d10v5_CYDA8L
+XXM2 IN OUT VDD VDD sky130_fd_pr__pfet_g5v0d10v5_KLAZY6
+.ends
+
+.subckt latch Q QB GATEB D GATE VDD VSS
+Xx1 VDD GATEB D x3/IN GATE VSS pass_gate
+Xx2 VDD GATE Q x3/IN GATEB VSS pass_gate
+Xx3 VDD x3/IN QB VSS inverter
+Xx4 VDD QB Q VSS inverter
+.ends
+
+.subckt latched_switch Q D UB UA GATE VDD VSS
+Xx1 VDD x2/QB UA UB Q VSS pass_gate
+Xx2 Q x2/QB x3/OUT D GATE VDD VSS latch
+Xx3 VDD GATE x3/OUT VSS inverter
+.ends
+
+.subckt sky130_fd_pr__res_xhigh_po_0p35_75WWSS a_n35_n1307# a_n35_875# a_n165_n1437#
+X0 a_n35_875# a_n35_n1307# a_n165_n1437# sky130_fd_pr__res_xhigh_po_0p35 l=8.75
+.ends
+
+.subckt resistor_cell LINE D_LINE D_SHORT UB D_RES GATE UA VDD VSS
+Xx1 x1/Q D_RES x1/UB UA GATE VDD VSS latched_switch
+Xx3 x3/Q D_LINE LINE UA GATE VDD VSS latched_switch
+Xx2 x2/Q D_SHORT UB UA GATE VDD VSS latched_switch
+XXR1 x1/UB UB VSS sky130_fd_pr__res_xhigh_po_0p35_75WWSS
+.ends
+
+.subckt nand_gate VDD A OUT B VSS
+XXM1 OUT A VSS li_350_255# sky130_fd_pr__nfet_g5v0d10v5_CYDA8L
+XXM2 li_350_255# B VSS VSS sky130_fd_pr__nfet_g5v0d10v5_CYDA8L
+XXM3 A OUT VDD VDD sky130_fd_pr__pfet_g5v0d10v5_KLAZY6
+XXM4 B VDD VDD OUT sky130_fd_pr__pfet_g5v0d10v5_KLAZY6
+.ends
+
+.subckt and_gate VDD OUT B A VSS
+Xx1 VDD A x2/IN B VSS nand_gate
+Xx2 VDD x2/IN OUT VSS inverter
+.ends
+
+.subckt grid_cell VDD H_GATE V_GATE V_LINE VD_LINE V_NEXT VD_SHORT VD_RES H_LINE HD_LINE
++ H_NEXT HD_SHORT HD_RES NODE VSS
+Xx1 V_LINE VD_LINE VD_SHORT V_NEXT VD_RES x3/OUT NODE VDD VSS resistor_cell
+Xx2 H_LINE HD_LINE HD_SHORT H_NEXT HD_RES x3/OUT NODE VDD VSS resistor_cell
+Xx3 VDD x3/OUT V_GATE H_GATE VSS and_gate
+.ends
+

@@ -1,0 +1,7 @@
+** sch_path: /foss/designs/matrix-dac/xschem/pass_gate.sch
+.subckt pass_gate VDD ENB UA UB EN VSS
+*.PININFO VSS:B VDD:B UA:B UB:B EN:I ENB:I
+XM1 UA EN UB VSS sky130_fd_pr__nfet_g5v0d10v5 L=0.5 W=6.5 nf=1 m=1
+XM2 UA ENB UB VDD sky130_fd_pr__pfet_g5v0d10v5 L=0.5 W=10 nf=1 m=1
+.ends
+.end

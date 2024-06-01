@@ -1,0 +1,148 @@
+** sch_path: /foss/designs/matrix-dac/xschem/tt_um_htfab_fprn.sch
+.subckt tt_um_htfab_fprn VGND clk uo_out[0] ena rst_n ui_in[0] ui_in[1] ui_in[2] ui_in[3] ui_in[4] ui_in[5] ui_in[6] ui_in[7]
++ uio_in[0] uio_in[1] uio_in[2] uio_in[3] uio_in[4] uio_in[5] uio_in[6] uio_in[7] VPWR ua[0] uo_out[1] uo_out[2] uo_out[3] uo_out[4]
++ uo_out[5] uo_out[6] uo_out[7] uio_out[0] uio_out[1] uio_out[2] uio_out[3] uio_out[4] uio_out[5] uio_out[6] uio_out[7] uio_oe[0] uio_oe[1]
++ uio_oe[2] uio_oe[3] uio_oe[4] uio_oe[5] uio_oe[6] uio_oe[7] ua[1] ua[2] ua[3] ua[4] ua[5] ua[6] ua[7]
+*.PININFO VGND:B clk:I uo_out[0]:O ena:I rst_n:I ui_in[0]:I ui_in[1]:I ui_in[2]:I ui_in[3]:I ui_in[4]:I ui_in[5]:I ui_in[6]:I
+*+ ui_in[7]:I uio_in[0]:I uio_in[1]:I uio_in[2]:I uio_in[3]:I uio_in[4]:I uio_in[5]:I uio_in[6]:I uio_in[7]:I VPWR:B ua[0]:B uo_out[1]:O
+*+ uo_out[2]:O uo_out[3]:O uo_out[4]:O uo_out[5]:O uo_out[6]:O uo_out[7]:O uio_out[0]:O uio_out[1]:O uio_out[2]:O uio_out[3]:O uio_out[4]:O
+*+ uio_out[5]:O uio_out[6]:O uio_out[7]:O uio_oe[0]:O uio_oe[1]:O uio_oe[2]:O uio_oe[3]:O uio_oe[4]:O uio_oe[5]:O uio_oe[6]:O uio_oe[7]:O ua[1]:B
+*+ ua[2]:B ua[3]:B ua[4]:B ua[5]:B ua[6]:B ua[7]:B
+x1 VPWR ui_in[5] ui_in[6] ui_in[7] ui_in[2] ui_in[3] ui_in[4] uio_in[6] uio_in[3] uio_in[0] uio_in[5] uio_in[2] ui_in[1] uio_in[7]
++ uio_in[4] uio_in[1] ui_in[0] rst_n clk ua[0] net1 net2 net3 net4 net5 net6 VGND mini_grid
+* noconn ena
+* noconn #net1
+* noconn #net2
+* noconn #net3
+* noconn #net4
+* noconn #net5
+* noconn #net6
+* noconn ua[1]
+* noconn ua[2]
+* noconn ua[3]
+* noconn ua[4]
+* noconn ua[5]
+* noconn ua[6]
+* noconn ua[7]
+.ends
+
+* expanding   symbol:  /foss/designs/matrix-dac/xschem/mini_grid.sym # of pins=27
+** sym_path: /foss/designs/matrix-dac/xschem/mini_grid.sym
+** sch_path: /foss/designs/matrix-dac/xschem/mini_grid.sch
+.subckt mini_grid VDD VD_LINE VD_SHORT VD_RES HD_LINE HD_SHORT HD_RES V_GATE_0 V_GATE_1 V_GATE_2 H_GATE_0 H_GATE_1 H_GATE_2
++ V_INPUT_0 V_INPUT_1 V_INPUT_2 H_INPUT_0 H_INPUT_1 H_INPUT_2 ANALOG_PIN V_LINE_0 V_LINE_1 V_LINE_2 H_LINE_0 H_LINE_1 H_LINE_2 VSS
+*.PININFO V_INPUT_0:I V_INPUT_1:I V_INPUT_2:I H_INPUT_0:I H_INPUT_1:I H_INPUT_2:I V_GATE_0:I V_GATE_1:I V_GATE_2:I H_GATE_0:I
+*+ H_GATE_1:I H_GATE_2:I ANALOG_PIN:B VSS:B VDD:B VD_LINE:I VD_SHORT:I VD_RES:I HD_LINE:I HD_SHORT:I HD_RES:I V_LINE_0:B V_LINE_1:B V_LINE_2:B
+*+ H_LINE_0:B H_LINE_1:B H_LINE_2:B
+x1 VDD H_GATE_2 V_GATE_0 V_LINE_0 VD_LINE V_INPUT_0 VD_SHORT VD_RES H_LINE_2 HD_LINE net7 HD_SHORT HD_RES net6 VSS grid_cell
+x2 VDD H_GATE_2 V_GATE_1 V_LINE_1 VD_LINE V_INPUT_1 VD_SHORT VD_RES H_LINE_2 HD_LINE net8 HD_SHORT HD_RES net7 VSS grid_cell
+x3 VDD H_GATE_2 V_GATE_2 V_LINE_2 VD_LINE V_INPUT_2 VD_SHORT VD_RES H_LINE_2 HD_LINE H_INPUT_2 HD_SHORT HD_RES net8 VSS grid_cell
+x4 VDD H_GATE_1 V_GATE_0 V_LINE_0 VD_LINE net6 VD_SHORT VD_RES H_LINE_1 HD_LINE net4 HD_SHORT HD_RES net2 VSS grid_cell
+x5 VDD H_GATE_1 V_GATE_1 V_LINE_1 VD_LINE net7 VD_SHORT VD_RES H_LINE_1 HD_LINE net5 HD_SHORT HD_RES net4 VSS grid_cell
+x6 VDD H_GATE_1 V_GATE_2 V_LINE_2 VD_LINE net8 VD_SHORT VD_RES H_LINE_1 HD_LINE H_INPUT_1 HD_SHORT HD_RES net5 VSS grid_cell
+x7 VDD H_GATE_0 V_GATE_0 V_LINE_0 VD_LINE net2 VD_SHORT VD_RES H_LINE_0 HD_LINE net1 HD_SHORT HD_RES ANALOG_PIN VSS grid_cell
+x8 VDD H_GATE_0 V_GATE_1 V_LINE_1 VD_LINE net4 VD_SHORT VD_RES H_LINE_0 HD_LINE net3 HD_SHORT HD_RES net1 VSS grid_cell
+x9 VDD H_GATE_0 V_GATE_2 V_LINE_2 VD_LINE net5 VD_SHORT VD_RES H_LINE_0 HD_LINE H_INPUT_0 HD_SHORT HD_RES net3 VSS grid_cell
+.ends
+
+
+* expanding   symbol:  grid_cell.sym # of pins=15
+** sym_path: /foss/designs/matrix-dac/xschem/grid_cell.sym
+** sch_path: /foss/designs/matrix-dac/xschem/grid_cell.sch
+.subckt grid_cell VDD H_GATE V_GATE V_LINE VD_LINE V_NEXT VD_SHORT VD_RES H_LINE HD_LINE H_NEXT HD_SHORT HD_RES NODE VSS
+*.PININFO VSS:B H_NEXT:B VDD:B NODE:B HD_RES:I HD_SHORT:I HD_LINE:I VD_RES:I VD_SHORT:I VD_LINE:I H_GATE:I V_GATE:I H_LINE:B
+*+ V_NEXT:B V_LINE:B
+x1 VDD H_LINE HD_LINE HD_SHORT H_NEXT HD_RES net1 NODE VSS resistor_cell
+x2 VDD V_LINE VD_LINE VD_SHORT V_NEXT VD_RES net1 NODE VSS resistor_cell
+x3 VDD net1 H_GATE V_GATE VSS and_gate
+.ends
+
+
+* expanding   symbol:  resistor_cell.sym # of pins=9
+** sym_path: /foss/designs/matrix-dac/xschem/resistor_cell.sym
+** sch_path: /foss/designs/matrix-dac/xschem/resistor_cell.sch
+.subckt resistor_cell VDD LINE D_LINE D_SHORT UB D_RES GATE UA VSS
+*.PININFO VSS:B UB:B UA:B GATE:I D_RES:I D_SHORT:I D_LINE:I LINE:B VDD:B
+x1 VDD net2 D_RES GATE net1 UA VSS latched_switch
+XR1 net1 UB VSS sky130_fd_pr__res_xhigh_po_0p35 L=8.75 mult=1 m=1
+x2 VDD net3 D_SHORT GATE UB UA VSS latched_switch
+x3 VDD net4 D_LINE GATE LINE UA VSS latched_switch
+* noconn #net2
+* noconn #net3
+* noconn #net4
+.ends
+
+
+* expanding   symbol:  and_gate.sym # of pins=5
+** sym_path: /foss/designs/matrix-dac/xschem/and_gate.sym
+** sch_path: /foss/designs/matrix-dac/xschem/and_gate.sch
+.subckt and_gate VDD OUT A B VSS
+*.PININFO VSS:B VDD:B A:I OUT:O B:I
+x1 VDD A net1 B VSS nand_gate
+x2 VDD net1 OUT VSS inverter
+.ends
+
+
+* expanding   symbol:  latched_switch.sym # of pins=7
+** sym_path: /foss/designs/matrix-dac/xschem/latched_switch.sym
+** sch_path: /foss/designs/matrix-dac/xschem/latched_switch.sch
+.subckt latched_switch VDD Q D GATE UB UA VSS
+*.PININFO VSS:B UB:B VDD:B UA:B D:I GATE:I Q:O
+x1 VDD net1 UA UB Q VSS pass_gate
+x2 Q VDD net1 net2 D GATE VSS latch
+x3 VDD GATE net2 VSS inverter
+.ends
+
+
+* expanding   symbol:  nand_gate.sym # of pins=5
+** sym_path: /foss/designs/matrix-dac/xschem/nand_gate.sym
+** sch_path: /foss/designs/matrix-dac/xschem/nand_gate.sch
+.subckt nand_gate VDD A OUT B VSS
+*.PININFO VSS:B VDD:B B:I OUT:O A:I
+XM2 net1 B VSS VSS sky130_fd_pr__nfet_g5v0d10v5 L=0.5 W=0.65 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+XM3 OUT A VDD VDD sky130_fd_pr__pfet_g5v0d10v5 L=0.5 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29' pd='2*int((nf+1)/2) * (W/nf + 0.29)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+XM1 OUT A net1 VSS sky130_fd_pr__nfet_g5v0d10v5 L=0.5 W=0.65 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+XM4 OUT B VDD VDD sky130_fd_pr__pfet_g5v0d10v5 L=0.5 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29' pd='2*int((nf+1)/2) * (W/nf + 0.29)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+.ends
+
+
+* expanding   symbol:  inverter.sym # of pins=4
+** sym_path: /foss/designs/matrix-dac/xschem/inverter.sym
+** sch_path: /foss/designs/matrix-dac/xschem/inverter.sch
+.subckt inverter VDD IN OUT VSS
+*.PININFO VSS:B VDD:B IN:I OUT:O
+XM1 OUT IN VSS VSS sky130_fd_pr__nfet_g5v0d10v5 L=0.5 W=0.65 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+XM2 OUT IN VDD VDD sky130_fd_pr__pfet_g5v0d10v5 L=0.5 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29' pd='2*int((nf+1)/2) * (W/nf + 0.29)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+.ends
+
+
+* expanding   symbol:  pass_gate.sym # of pins=6
+** sym_path: /foss/designs/matrix-dac/xschem/pass_gate.sym
+** sch_path: /foss/designs/matrix-dac/xschem/pass_gate.sch
+.subckt pass_gate VDD ENB UA UB EN VSS
+*.PININFO VSS:B VDD:B UA:B UB:B EN:I ENB:I
+XM1 UA EN UB VSS sky130_fd_pr__nfet_g5v0d10v5 L=0.5 W=6.5 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29' pd='2*int((nf+1)/2) * (W/nf + 0.29)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+XM2 UA ENB UB VDD sky130_fd_pr__pfet_g5v0d10v5 L=0.5 W=10 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29' pd='2*int((nf+1)/2) * (W/nf + 0.29)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+.ends
+
+
+* expanding   symbol:  latch.sym # of pins=7
+** sym_path: /foss/designs/matrix-dac/xschem/latch.sym
+** sch_path: /foss/designs/matrix-dac/xschem/latch.sch
+.subckt latch Q VDD QB GATEB D GATE VSS
+*.PININFO VSS:B VDD:B D:I GATE:I GATEB:I Q:O QB:O
+x1 VDD GATEB D net1 GATE VSS pass_gate
+x2 VDD GATE Q net1 GATEB VSS pass_gate
+x3 VDD net1 QB VSS inverter
+x4 VDD QB Q VSS inverter
+.ends
+
+.end
