@@ -74,7 +74,8 @@ tt.uio_in.value[0] = 1   # V_GATE_2
 # the design
 
 print("Selecting the design")
-tt.shuttle.tt_um_htfab_fprn.enable()
+tt.shuttle.reset_and_clock_mux(482)  # tt_um_htfab_fprn
+tt.uio_oe_pico.value = 0b11111111
 
 # Allow some time to latch the safe configuration
 

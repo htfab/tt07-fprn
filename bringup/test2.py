@@ -74,7 +74,8 @@ tt.uio_in.value[0] = 1   # V_GATE_2
 # the design
 
 print("Selecting the design")
-tt.shuttle.tt_um_htfab_fprn.enable()
+tt.shuttle.reset_and_clock_mux(482)  # tt_um_htfab_fprn
+tt.uio_oe_pico.value = 0b11111111
 
 # Allow some time to latch the safe configuration
 
@@ -97,10 +98,11 @@ tt.uio_in.value[0] = 0   # V_GATE_2
 
 time.sleep_ms(10)
 
+
 # Set up a function to configure a grid cell
 
 def config(row, column, hd_res, hd_short, hd_line, vd_res, vd_short, vd_line):
-    
+
     # Enable the configuration latches for the current row and column only
 
     tt.uio_in.value[5] = (1 if row == 0 else 0)     # H_GATE_0
@@ -110,9 +112,9 @@ def config(row, column, hd_res, hd_short, hd_line, vd_res, vd_short, vd_line):
     tt.uio_in.value[6] = (1 if column == 0 else 0)  # V_GATE_0
     tt.uio_in.value[3] = (1 if column == 1 else 0)  # V_GATE_1
     tt.uio_in.value[0] = (1 if column == 2 else 0)  # V_GATE_2
-    
+
     time.sleep_ms(10)
-    
+
     # Set the grid configuration using HD_* and VD_*
 
     tt.ui_in.value[4]  = hd_res     # HD_RES
@@ -122,11 +124,11 @@ def config(row, column, hd_res, hd_short, hd_line, vd_res, vd_short, vd_line):
     tt.ui_in.value[7]  = vd_res     # VD_RES
     tt.ui_in.value[6]  = vd_short   # VD_SHORT
     tt.ui_in.value[5]  = vd_line    # VD_LINE
-    
+
     time.sleep_ms(10)
 
     # Turn off all the latches once again
-    
+
     tt.uio_in.value[5] = 0   # H_GATE_0
     tt.uio_in.value[2] = 0   # H_GATE_1
     tt.ui_in.value[1]  = 0   # H_GATE_2
@@ -134,7 +136,7 @@ def config(row, column, hd_res, hd_short, hd_line, vd_res, vd_short, vd_line):
     tt.uio_in.value[6] = 0   # V_GATE_0
     tt.uio_in.value[3] = 0   # V_GATE_1
     tt.uio_in.value[0] = 0   # V_GATE_2
-    
+
     time.sleep_ms(10)
 
 
@@ -175,19 +177,19 @@ config(   2,      2,      0,        0,       0,      1,        0,       0)
 # Set up a function to manipulate the DAC inputs
 
 def dac_set(value):
-    
+
     # Convert 3-bit integer input to binary
 
     bit0 = 1 if (value & 1 != 0) else 0
     bit1 = 1 if (value & 2 != 0) else 0
     bit2 = 1 if (value & 4 != 0) else 0
-    
+
     # Connect HI_* to ground (just to be pedantic)
-    
+
     tt.ui_in.value[0]  = 0   # HI_0
     tt.rst_n.value     = 0   # HI_1
     tt.clk.value       = 0   # HI_2
-    
+
     # Set VI_* to the input bits as in the network graph
 
     tt.uio_in.value[7] = bit2   # VI_0
@@ -195,6 +197,7 @@ def dac_set(value):
     tt.uio_in.value[1] = bit0   # VI_2
 
 # Run a demo loop cycling the DAC inputs
+
 
 print("Running demo loop")
 
